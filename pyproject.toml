@@ -1,0 +1,12 @@
+[project]
+name = "ecoom-back"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.116.1",
+    "generativeai>=0.0.1",
+    "openai-agents>=0.2.8",
+    "twilio>=9.7.1",
+]
