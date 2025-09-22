@@ -1,4 +1,5 @@
-fastapi>=0.116.1,
-generativeai>=0.0.1,
-openai-agents>=0.2.8,
-twilio>=9.7.1,
+openai-agents
+fastapi
+generativeai
+twilio
+uvicorn
