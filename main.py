@@ -372,4 +372,6 @@ async def start_chat(input_received: Message):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=9007)
+    port = int(os.getenv("PORT", 9007))  # Railway → uses $PORT, local → 9007
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
