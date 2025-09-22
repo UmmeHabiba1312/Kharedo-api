@@ -272,7 +272,8 @@ ecommerce_agent = Agent(
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://kharedo-omega.vercel.app"],  
+    allow_origins=["https://kharedo-omega.vercel.app",
+                   "https://kharedo-umm-e-habibas-projects.vercel.app"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
