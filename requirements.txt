@@ -2,3 +2,4 @@ openai-agents
 fastapi
 generativeai
 twilio
+uvicorn
