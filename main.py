@@ -16,12 +16,12 @@ load_dotenv()
 # Environment variables
 gemini_api_key = os.getenv("GEMINI_API_KEY")
 # Twilio credentials (Twilio Console -> Account SID & Auth Token se lo)
-ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
-AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+# ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+# AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 FROM_WHATSAPP = "whatsapp:+14155238886"  # Twilio Sandbox number
 TO_WHATSAPP = "whatsapp:+923072502073"  # Tumhara WhatsApp number
 
-client = Client(ACCOUNT_SID, AUTH_TOKEN)
+# client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
 
 if not gemini_api_key:
@@ -158,14 +158,14 @@ def place_order(item: str, phone_number: str, address: str, quantity: int = 1):
     )
 
     # Send WhatsApp message via Twilio Sandbox
-    try:
-        client.messages.create(
-            body=message_body,
-            from_=FROM_WHATSAPP,              # Twilio Sandbox number
-            to=f"whatsapp:+92{phone_number.lstrip('0')}"  # convert 03072502073 -> +923072502073
-        )
-    except Exception as e:
-        print(f"Failed to send WhatsApp message: {e}")
+    # try:
+    #     client.messages.create(
+    #         body=message_body,
+    #         from_=FROM_WHATSAPP,              # Twilio Sandbox number
+    #         to=f"whatsapp:+92{phone_number.lstrip('0')}"  # convert 03072502073 -> +923072502073
+    #     )
+    # except Exception as e:
+    #     print(f"Failed to send WhatsApp message: {e}")
 
     return {
         "order_id": order_id,
@@ -330,11 +330,11 @@ def place_order(product_name: str, quantity: int, price: float):
     # WhatsApp message bhejna
     message_body = f"✅ Your order has been placed!\n\n🛒 Product: {product_name}\n📦 Quantity: {quantity}\n💵 Total: ${total_price}\n🆔 Order ID: {order_id}\n🚚 Delivery in 5 days."
     
-    client.messages.create(
-        body=message_body,
-        from_=FROM_WHATSAPP,
-        to=TO_WHATSAPP
-    )
+    # client.messages.create(
+    #     body=message_body,
+    #     from_=FROM_WHATSAPP,
+    #     to=TO_WHATSAPP
+    # )
     
     return {
         "status": "success",
