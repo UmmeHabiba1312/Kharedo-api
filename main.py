@@ -6,8 +6,6 @@ from pydantic import BaseModel
 from agents import Agent, ModelSettings, Runner, OpenAIChatCompletionsModel, RunConfig, function_tool
 from dotenv import load_dotenv
 import os
-# import requests
-# import time
 from twilio.rest import Client
 from openai import AsyncOpenAI
 
@@ -15,11 +13,10 @@ load_dotenv()
 
 # Environment variables
 gemini_api_key = os.getenv("GEMINI_API_KEY")
-# Twilio credentials (Twilio Console -> Account SID & Auth Token se lo)
 ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-FROM_WHATSAPP = "whatsapp:+14155238886"  # Twilio Sandbox number
-TO_WHATSAPP = "whatsapp:+923072502073"  # Tumhara WhatsApp number
+FROM_WHATSAPP = "whatsapp:+14155238886" 
+TO_WHATSAPP = "whatsapp:+923072502073"  
 
 client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
@@ -44,9 +41,8 @@ config = RunConfig(
     tracing_disabled=True,
 )
 
-# ------------------------------
 # Product catalog & orders DB
-# ------------------------------
+
 products = {
     # Mobiles
     "iPhone 15 Pro": {"price": 1199.99, "category": "Mobiles", "stock": 20},
@@ -97,9 +93,6 @@ products = {
 
 orders_db = {}
 
-# ------------------------------
-# Tools
-# ------------------------------
 @function_tool
 def show_catalog(category: str = None):
     """Show catalog items optionally filtered by category"""
@@ -227,21 +220,6 @@ def show_categories():
         unique_categories = list({info["category"] for info in products.values()})
         return {"categories": unique_categories}
 
-
-
-
-
-    # payload = {"token": ULTRAMSG_TOKEN, "to": OWNER_PHONE, "body": owner_message}
-    # try:
-    #     requests.post(ULTRAMSG_URL, data=payload)
-    # except Exception as e:
-    #     print(f"Failed to notify owner: {str(e)}")
-
-    # return {"message": f"✅ Order updated. New details: {order}"}
-
-# ------------------------------
-# Agents
-# ------------------------------
 place_order_agent = Agent(
     name="place_order",
     instructions="Collect info and place e-commerce orders.",
@@ -290,9 +268,7 @@ ecommerce_agent = Agent(
     handoffs=[place_order_agent, update_order_agent, cancel_order_agent]
 )
 
-# ------------------------------
-# FastAPI app
-# ------------------------------
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -309,12 +285,13 @@ conversation_history = {}
 def home():
     return {"message": "Welcome to E-Commerce Agent Backend!"}
 
-class MessageInput(BaseModel):
+class ChatMessage(BaseModel):
     role: str
     content: str
 
-class Message(BaseModel):
-    message: list[MessageInput]
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]
+
 
 
 @app.get("/categories")
@@ -343,13 +320,13 @@ def place_order(product_name: str, quantity: int, price: float):
     }
 
 @app.post("/chat/start")
-async def start_chat(input_received: Message):
+async def start_chat(req: ChatRequest):
     session_id = "default_user"
     if session_id not in conversation_history:
         conversation_history[session_id] = []
 
     # Save incoming messages
-    for msg in input_received.message:
+    for msg in req.messages:
         conversation_history[session_id].append({"role": msg.role, "content": msg.content})
 
     # Format correctly for Runner
@@ -368,10 +345,8 @@ async def start_chat(input_received: Message):
 
     return {"response": response.final_output.strip()}
 
-# You can add WhatsApp / Gupshup webhook endpoints like in your food code
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.getenv("PORT", 9007))  # Railway → uses $PORT, local → 9007
+    port = int(os.getenv("PORT", 9007))  
     uvicorn.run(app, host="0.0.0.0", port=port)
-
