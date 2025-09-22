@@ -347,6 +347,5 @@ async def start_chat(req: ChatRequest):
 
 
 if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", 9007))  
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    import uvicorn  
+    uvicorn.run(app, host="0.0.0.0", port=8080)
